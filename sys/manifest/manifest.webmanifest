@@ -1,0 +1,16 @@
+{
+    "lang": "en",
+    "name": "Farma",
+    "short_name": "Farma",
+    "icons": [{
+        "src": "sys/img/icons/apple-touch-icon.png",
+        "sizes": "128x128",
+        "type": "image/png"
+    }],
+    "scope": "./",
+    "start_url": "../../",
+    "display": "fullscreen",
+    "orientation": "portrait",
+    "theme_color": "#ffcd00",
+    "background_color": "#fff"
+}
