@@ -20,35 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc69b26d-ea7f-4a9e-bf91-8a87b3fb71bb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/character/grab_sheet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/character/sword_sheet_128.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/magic_firelion_big.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/magic_firelion_sheet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/magic_iceshield_sheet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/magic_snakebite_sheet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/magic_torrentacle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/turtleshell_front.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magic/turtleshell_side.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/magics_preview.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/readme.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tileset_preview.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/farming_fishing.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/fence.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/fence_alt.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/plants.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/plowed_soil.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/reed.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/sand.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/sandwater.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/tallgrass.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/wheat.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/tilesets/youngwheat.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/ui/scrollsandblocks.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/submission_daneeklu/ui_preview.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/pages/game-ui.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/pages/game.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/pages/menu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sys/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sys/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sys/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/sys/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605838183347</updated>
-      <workItem from="1605838232795" duration="2955000" />
+      <workItem from="1605838232795" duration="6261000" />
     </task>
     <servers />
   </component>
