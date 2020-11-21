@@ -10,7 +10,7 @@
       <e p="node_modules\eventemitter3" t="IncludeRecursive" />
       <e p="node_modules\font-awesome" t="IncludeRecursive" />
       <e p="node_modules\jquery" t="IncludeRecursive" />
-      <e p="node_modules\normalize" t="IncludeRecursive" />
+      <e p="node_modules\normalize.css" t="IncludeRecursive" />
       <e p="node_modules\phaser" t="IncludeRecursive" />
       <e p="node_modules\pouchdb" t="IncludeRecursive" />
       <e p="node_modules\qs" t="IncludeRecursive" />

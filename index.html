@@ -45,11 +45,13 @@
 
 
 	<!--Scripts-->
-		<script src="/node_modules/qs/dist/qs.js"></script>
-		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
-		<script src="/node_modules/angular/angular.min.js"></script>
-		<script src="/node_modules/velocity-animate/velocity.min.js"></script>
-		<script async defer src="/node_modules/velocity-animate/velocity.ui.min.js"></script>
+		<script src="node_modules/qs/dist/qs.js"></script>
+		<script src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="node_modules/angular/angular.min.js"></script>
+		<script src="node_modules/velocity-animate/velocity.min.js"></script>
+		<script src="node_modules/velocity-animate/velocity.ui.min.js"></script>
+		<script src="node_modules/phaser/dist/phaser.min.js"></script>
+		<script src="node_modules/pouchdb/dist/pouchdb.min.js"></script>
 		
 		<!--I'll decide later if I'm going to add some kind of multiplayer... and realistically I'll probably use Geckos.js-->
 		<!--<script src="/socket.io/socket.io.js"></script>
@@ -66,9 +68,11 @@
 
 
 </head>
-<body ng-controller="master">
+<body ng-controller="master" ng-init="init()">
 
-	<div class="page-include page-{{$root.page}}" ng-include="'sys/pages/' + ($root.page || 'menu') + '.html'"></div>
+	<div class="page">
+		<div class="page-{{$root.page}}" ng-include="'sys/pages/' + ($root.page || 'main-menu') + '.html'"></div>
+	</div>
 
 	<!--Initialize the app-->
 	<script src="sys/js/main.js"></script>
