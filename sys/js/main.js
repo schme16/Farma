@@ -53,26 +53,44 @@ angular.module('farma', [])
 	
 	//Creates a blank game state, used for new games, and while loading game states
 	m.newGameState = () => {
-		m.game = {
+		m.game = m.game || {
+			config: {
+				type: Phaser.AUTO,
+				mode: Phaser.Scale.NONE,
+				backgroundColor: 0x613b03,
+				parent: $('<div>')[0],
+				tileSize: 32,
+				sizeInTiles: 17,
+				autoCenter: Phaser.Scale.CENTER_BOTH,
+				scene: {
+					preload: function () {m.enginePreload(this)}, //Needs to be in the in `function () {}` notation, something about contexts... 
+					create:  function () {m.engineCreate(this)}, //Needs to be in the in `function () {}` notation, something about contexts...
+					update:  function () {m.engineUpdate(this)} //Needs to be in the in `function () {}` notation, something about contexts...
+				}
+			},
 			clearList:[],
+			layers: {},
 			state: {
 				gardenSize: 9,
 				plants: {}
 			}
 		}
 		
+		//Set the width and height
+		m.game.config.width = m.game.config.sizeInTiles * m.game.config.tileSize
+		m.game.config.height = m.game.config.sizeInTiles * m.game.config.tileSize
+		
 	}
 	
 	//Creates a new game
-	m.newGame = () => {
+	m.newGame = (callback) => {
 		if (!m.$root.transitioning) {
-			m.clearGame()
-
 			m.newGameState()
 
 			m.setPage('game', null, () => {
 				requestAnimationFrame(() => {
 					m.initializeEngine()
+					if (callback) callback()
 				})
 
 			})
@@ -80,61 +98,76 @@ angular.module('farma', [])
 	}
 	
 	//Save game state into a file
-	m.saveGame = (filename, state) => {
+	m.saveGame = (filename, rawState, rev) => {
+
+		//Sanitize the state
+		let state = rawState
+		for (let i in state.plants) {
+			delete state.plants[i].tile
+		}
 		
 		//Truncate the filename at 32
 		filename = filename.substr(0,32)
+		
+		//Save it to the database
 		m.database.put({
 			_id: filename,
+			_rev: rev || null,
 			state: state,
 			timestamp: new Date().getTime()
-		}).then(function (response) {
+		}, {force: true}).then(function (response) {
 			// handle response
 		}).catch(function (err) {
-			console.log(err);
+			
+			//Was there an overwrite conflict?
+			if (err.status === 409 && !rev) {
+				
+				//Load the _rev, and try again
+				m.loadGame(filename, (doc) => {
+					m.saveGame(filename, state, doc._rev)
+				}, true)
+			}
 		})
 	}
 	
 	//Load a file into the game state
-	m.loadGame = (filename) => {
+	m.loadGame = (filename, callback, handbackOnly) => {
 			
 		//Truncate the filename at 32
 		filename = filename.substr(0,32)
 
 		//Fetch teh record
 		m.database.get(filename).then(function (response) {
-			//TODO: do error catching, currently assumes valid responses 
 			
-			//Clear the current game, if any
-			m.clearGame()
+			//Are we actually loading the game?
+			if (!handbackOnly) {
+				//Clear the current game, if any
+				m.clearGame()
+								
+				//Load the saved state
+				m.game.state = response.state
+				
+				//Re-initialize the garden
+				m.setUpGarden(m.game._t)
+				
+				//Add the plant sprite for each plant
+				for (let i in m.game.state.plants) {
+					let plant = m.game.state.plants[i],
+						pos = m.fromPosStr(i)
+					m.sowPlant(plant.plantType, pos.x, pos.y, true, true)
+				}
+				
+			}
 			
-			//Create a basic state
-			m.newGameState()
-			
-			//Load the saved state
-			m.game.state = response.state
-			
-			//Start the engine
-			m.initializeEngine()
+			//Just hand the entry back
+			else {
+				callback(response)
+			}
 			
 		}).catch(function (err) {
 			console.log(err);
 		})
 		
-	}
-	
-	//Destroys or otherwise resets all of the engine stuff.
-	m.clearGame = () => {
-		if (m.game && m.game.clearList) {
-			for (let i in m.game.clearList) {
-				try {
-					eval(`${m.game.clearList[i]}.destroy()`)
-					
-				} catch(e) {
-					console.log(1)
-				}
-			}
-		}
 	}
 	
 	//Used to force the game state to match the given data - used for loading games
@@ -205,8 +238,6 @@ angular.module('farma', [])
 	
 	//Hands back an array of x-y notations of valid cells
 	m.returnValidFarmCells = (X, Y, maxX, maxY) => {
-
-		
 		let validCells = []
 		for (let y = 0; y < m.game.state.gardenSize; y++) {
 			for (let x = 0; x < m.game.state.gardenSize; x++) {
@@ -235,47 +266,72 @@ angular.module('farma', [])
 	}
 	
 	//Plants a plant in a cell, if the cell is free / forced
-	m.sowPlant = (plantType, x, y, force) => {
-		
+	m.sowPlant = (plantType, x, y, force, spriteOnly) => {
 		//Get the position string, and the cell
 		let posStr = m.toPosStr(x, y),
 			cell = m.game.state.plants[posStr]
 		
 		//Check if the cell is valid (aka empty)
 		if ((!cell || (!!cell && cell.isSoil)) || force) {
-			//Set the cell to the new plant in the state
-			m.game.state.plants[posStr] = {
-				plantType: plantType,
-				soilType: (cell && cell.isSoil ? cell.soilType : 'normal'),
-				fertilizerType: (cell && cell.isSoil ? cell.fertilizerType : 'normal'),
-				tile: m.game.layers.crops.putTileAt(plantType, x, y),
-				timestamp: new Date().getTime()
-			}
+			let tile = m.game.layers.crops.putTileAt(plantType, x, y)
 			
+			//Make a state entry too?
+			if (!spriteOnly) {
+				//Set the cell to the new plant in the state
+				m.game.state.plants[posStr] = {
+					plantType: plantType,
+					soilType: (cell && cell.isSoil ? cell.soilType : 'normal'),
+					fertilizerType: (cell && cell.isSoil ? cell.fertilizerType : 'normal'),
+					tile: tile, 
+					timestamp: new Date().getTime()
+				}
+			}
+			else {
+				return tile
+			}
+		}
+	}
+	
+	//Creates the layers, destroying old ones if need be
+	m.createLayers = () => {
+		if (m.game.layers.soils) m.game.layers.soils.destroy()
+		m.game.layers.soils = m.game.map.createBlankDynamicLayer('soils', m.game.tiles.soils)
+		
+		if (m.game.layers.crops) m.game.layers.crops.destroy()
+		m.game.layers.crops = m.game.map.createBlankDynamicLayer('crops', m.game.tiles.crops)
+		
+		m.createBorders()
+	}
+
+	//Creates layers, and sets camera position
+	m.setUpGarden = (t) => {
+		
+		//Register the layers
+		m.createLayers()
+		
+		//Create the valid cells, and garden bed
+		m.returnValidFarmCells()
+		
+		//Calculate the center position of the garden for the camera
+		m.game.cameraPos = {
+	    	x: (m.game.config.width/2) - ((m.game.state.gardenSize/2) * m.game.config.tileSize),
+			y: (m.game.config.height/2) - ((m.game.state.gardenSize/2 * m.game.config.tileSize))
+		}
+		
+		//Set the camera position
+		t.cameras.main.setPosition(m.game.cameraPos.x, m.game.cameraPos.y)
+	}
+	
+	//This is where things like determining growth and so forth are.
+	m.updatePlants = () => {
+		for (let i in m.game.state.plants) {
+			let plant = m.game.state.plants[i]
 			
 		}
 	}
 	
 	//Creates the game engine (Phaser currently)
 	m.initializeEngine = () => {
-		m.game.config = {
-			type: Phaser.AUTO,
-			mode: Phaser.Scale.NONE,
-			backgroundColor: 0x613b03,
-			parent: $('<div>')[0],
-			tileSize: 32,
-			autoCenter: Phaser.Scale.CENTER_BOTH,
-			scene: {
-				preload: function () {m.enginePreload(this)}, //Needs to be in the in `function () {}` notation, something about contexts... 
-				create:  function () {m.engineCreate(this)}, //Needs to be in the in `function () {}` notation, something about contexts...
-				update:  function () {m.engineUpdate(this)} //Needs to be in the in `function () {}` notation, something about contexts...
-			}
-		}
-		
-		//Set the width and height
-		m.game.config.width = ((16 + 1) * m.game.config.tileSize)
-		m.game.config.height = ((16 + 1) * m.game.config.tileSize)
-		
 		//Create the engine
 		m.game.engine = new Phaser.Game(m.game.config)
 		
@@ -284,9 +340,6 @@ angular.module('farma', [])
 		
 		//Append it to the DOM 
 		m.game.canvas.appendTo('.game')
-
-		
-
 	}
 	
 	//Handles preloading assets
@@ -338,26 +391,7 @@ angular.module('farma', [])
 			m.game.mouse.clicked = true
 		})
 		
-		//Register the layers
-		m.game.layers = {}
-		
-		m.game.layers.soils = m.game.map.createBlankDynamicLayer('soils', m.game.tiles.soils),
-		m.game.layers.crops = m.game.map.createBlankDynamicLayer('crops', m.game.tiles.crops)
-		
-		//Create the valid cells, and garden bed
-		m.returnValidFarmCells()
-		
-		//Create the borders
-		m.createBorders()
-		
-		//Calculate the center position of the garden for the camera
-		m.game.cameraPos = {
-	    	x: (m.game.config.width/2) - ((m.game.state.gardenSize/2) * m.game.config.tileSize),
-			y: (m.game.config.height/2) - ((m.game.state.gardenSize/2 * m.game.config.tileSize))
-		}
-		
-		//Set the camera position
-		t.cameras.main.setPosition(m.game.cameraPos.x, m.game.cameraPos.y)
+		m.setUpGarden(t)
 		
 	}
 		
@@ -365,7 +399,10 @@ angular.module('farma', [])
 	m.engineUpdate = (t) => {
 		m.game._t = t
 		
+		//Does the map exist?
 		if (m.game.map) {
+			
+			
 			//All the mouse stuff
 			if (m.game.mouse) {
 				//Cell checks
@@ -392,6 +429,9 @@ angular.module('farma', [])
 				}
 			
 			}
+			
+			//The plants stuff
+				m.updatePlants()
 		}
 
 	}
