@@ -20,9 +20,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc69b26d-ea7f-4a9e-bf91-8a87b3fb71bb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/res/border-tiles.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/crops/crops.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/terrain.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/terrain/Attribution.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/terrain/terrain.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/terrain/terrain.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sys/img/fences.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sys/img/terrain.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sys/js/plants.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sys/js/soils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/border-tiles.psd" beforeDir="false" afterPath="$PROJECT_DIR$/res/border-tiles.psd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sys/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sys/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sys/img/border-tiles.png" beforeDir="false" afterPath="$PROJECT_DIR$/sys/img/border-tiles.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sys/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/sys/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sys/pages/main-menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/sys/pages/main-menu.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +47,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -46,13 +61,15 @@
         <option value="$PROJECT_DIR$/sys/manifest/manifest.webmanifest" />
         <option value="$PROJECT_DIR$/sys/pages/menu.html" />
         <option value="$PROJECT_DIR$/sys/pages/loading.html" />
-        <option value="$PROJECT_DIR$/sys/pages/main-menu.html" />
         <option value="$PROJECT_DIR$/sys/pages/load-game.html" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/LTI shorthands.html" />
         <option value="$PROJECT_DIR$/sys/css/mobile.css" />
         <option value="$PROJECT_DIR$/sys/pages/game.html" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/temp.js" />
+        <option value="$PROJECT_DIR$/sys/js/plants.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/sys/pages/main-menu.html" />
+        <option value="$PROJECT_DIR$/sys/js/soils.js" />
         <option value="$PROJECT_DIR$/sys/js/main.js" />
       </list>
     </option>
@@ -81,7 +98,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605838183347</updated>
-      <workItem from="1605838232795" duration="49297000" />
+      <workItem from="1605838232795" duration="65887000" />
     </task>
     <servers />
   </component>
@@ -104,5 +121,19 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1033" y="462" width="540" height="524" key="StructurePopup" timestamp="1606273527232">
+      <screen x="62" y="0" width="2498" height="1440" />
+    </state>
+    <state x="1033" y="462" width="540" height="524" key="StructurePopup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606273527232" />
+    <state x="968" y="341" key="run.anything.popup" timestamp="1606265741511">
+      <screen x="62" y="0" width="2498" height="1440" />
+    </state>
+    <state x="968" y="341" key="run.anything.popup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606265741511" />
+    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup" timestamp="1606264049777">
+      <screen x="62" y="0" width="2498" height="1440" />
+    </state>
+    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606264049777" />
   </component>
 </project>

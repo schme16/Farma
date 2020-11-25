@@ -53,19 +53,19 @@ body{
 
 .game {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
     height: 100%;
     /* width: 500px; */
-    border-radius: 50px !important;
-    overflow: hidden;
+    /* border-radius: 50px !important; */
+    /* overflow: hidden; */
     /* position: absolute; */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    background: #212120;
+    /* top: 0; */
+    /* left: 0; */
+    /* right: 0; */
+    /* bottom: 0; */
+    /* margin: auto; */
+    /* background: #212120; */
 }
 
 .page-game {
@@ -78,5 +78,5 @@ body{
     margin: auto !important;
     border-radius: 50px !important;
     overflow: hidden;
-    background: #212120 !important;
+    background: #996b4a;
 }

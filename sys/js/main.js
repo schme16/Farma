@@ -17,6 +17,12 @@ angular.module('farma', [])
 	//Set the page as per the query, or failing that, just load the menu
 	m.$root.page = m.query.page || 'loading'
 	
+	//import the soils
+	m.soils = soils
+	
+	//Import the plants
+	m.plants = plants
+	
 	//Initialize the app
 	m.init = () => {
 		m.$root.loading = false
@@ -51,13 +57,13 @@ angular.module('farma', [])
 		}
 	}
 	
-	//Creates a blank game state, used for new games, and while loading game states
+	//Creates a blank game state, used for new games, and while loading game states, as well as the engine config
 	m.newGameState = () => {
 		m.game = m.game || {
 			config: {
 				type: Phaser.AUTO,
 				mode: Phaser.Scale.NONE,
-				backgroundColor: 0x613b03,
+				transparent: true,
 				parent: $('<div>')[0],
 				tileSize: 32,
 				sizeInTiles: 17,
@@ -71,8 +77,9 @@ angular.module('farma', [])
 			clearList:[],
 			layers: {},
 			state: {
-				gardenSize: 9,
-				plants: {}
+				gardenSize: 5,
+				plants: {},
+				soil: {}
 			}
 		}
 		
@@ -84,13 +91,16 @@ angular.module('farma', [])
 	
 	//Creates a new game
 	m.newGame = (callback) => {
+		
+		//Make sure the page isn't currently transitioning
 		if (!m.$root.transitioning) {
+			
+			//Create a new game state
 			m.newGameState()
 
 			m.setPage('game', null, () => {
 				requestAnimationFrame(() => {
-					m.initializeEngine()
-					if (callback) callback()
+					m.initializeEngine(callback)
 				})
 
 			})
@@ -104,6 +114,10 @@ angular.module('farma', [])
 		let state = rawState
 		for (let i in state.plants) {
 			delete state.plants[i].tile
+		}
+		
+		for (let i in state.soil) {
+			delete state.soil[i].tile
 		}
 		
 		//Truncate the filename at 32
@@ -120,12 +134,17 @@ angular.module('farma', [])
 		}).catch(function (err) {
 			
 			//Was there an overwrite conflict?
-			if (err.status === 409 && !rev) {
-				
+			if (!rev) {
+				console.log(1)
 				//Load the _rev, and try again
 				m.loadGame(filename, (doc) => {
+					console.log(2)
+					
 					m.saveGame(filename, state, doc._rev)
 				}, true)
+			}
+			else {
+				console.log(3, rev)
 			}
 		})
 	}
@@ -136,25 +155,34 @@ angular.module('farma', [])
 		//Truncate the filename at 32
 		filename = filename.substr(0,32)
 
-		//Fetch teh record
+		let finalStep = (filename, response) => {
+			//Load the saved state
+			m.game.state = response.state
+			
+			//Re-initialize the garden
+			m.setUpGarden(m.game._t)
+			
+			//Add the plant sprite for each plant
+			for (let i in m.game.state.plants) {
+				let plant = m.game.state.plants[i],
+					pos = m.fromPosStr(i)
+				m.sow(plant, pos.x, pos.y, true, true)
+			}
+		}
+		
+		//Fetch the record
 		m.database.get(filename).then(function (response) {
 			
 			//Are we actually loading the game?
 			if (!handbackOnly) {
-				//Clear the current game, if any
-				m.clearGame()
-								
-				//Load the saved state
-				m.game.state = response.state
 				
-				//Re-initialize the garden
-				m.setUpGarden(m.game._t)
-				
-				//Add the plant sprite for each plant
-				for (let i in m.game.state.plants) {
-					let plant = m.game.state.plants[i],
-						pos = m.fromPosStr(i)
-					m.sowPlant(plant.plantType, pos.x, pos.y, true, true)
+				if (!m.game) {
+					m.newGame(() => {
+						finalStep(filename, response)
+					})
+				}
+				else {
+					finalStep(filename, response)
 				}
 				
 			}
@@ -181,61 +209,98 @@ angular.module('farma', [])
 	}
 	
 	//Creates the grids and borders for the planting patch
-	m.createBorders = () => {
-		
-		//Destroy the layers (if they exist), then remake them 
-		if (m.game.layers.grid) m.game.layers.grid.destroy()
-		m.game.layers.grid = m.game.map.createBlankDynamicLayer('grid', m.game.tiles.borders)
-		
-		if (m.game.layers.borders) m.game.layers.borders.destroy()
-		m.game.layers.borders = m.game.map.createBlankDynamicLayer('borders', m.game.tiles.borders)
-			
-				
+	m.createBed = () => {
 		for (let y = 0; y < m.game.state.gardenSize; y++) {
 			for (let x = 0; x < m.game.state.gardenSize; x++) {
 
-				m.game.layers.grid.putTileAt(9, x, y)
+				//Add the most common grid item (bottom right corner piece)
+				if (x > 0 && x < m.game.state.gardenSize - 1 && y > 0 && y < m.game.state.gardenSize - 1) {
+					m.game.layers.grids.putTileAt(14, x, y)
 
-				//Handle the corners
-			
+					//Add the correction for the bottom row
+					if (x > 0 && y == m.game.state.gardenSize - 2) {
+						m.game.layers.grids.putTileAt(15, x, y)
+					}
+					//Add the correction for the right column row
+					if (x == m.game.state.gardenSize - 2 && y > 0 && y < m.game.state.gardenSize - 2) {
+						m.game.layers.grids.putTileAt(16, x, y)
+					}
+				
+					
+					
+					//Fix the bottom right corner
+					m.game.layers.grids.putTileAt(50, m.game.state.gardenSize - 2, m.game.state.gardenSize - 2)
+				}
+
+				
 				//Top left corner
 				if (y == 0 && x == 0) {
-		            m.game.layers.borders.putTileAt(0, x, y)
+		            //m.game.layers.borders.putTileAt(0, x, y)
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'top-left'), x, y)
+				}
+				
+				//Top middle
+				else if (y == 0 && x > 0 && x < m.game.state.gardenSize - 1) {
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'top-middle'), x, y)
 				}
 				
 				//Top right corner
 				else if (y == 0 && x == m.game.state.gardenSize - 1) {
-		            m.game.layers.borders.putTileAt(2, x, y)
+		           //m.game.layers.borders.putTileAt(2, x, y)
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'top-right'), x, y)
 				}
 				
-				//Bottom left corner
-				else if (y == m.game.state.gardenSize - 1 && x == 0) {
-		            m.game.layers.borders.putTileAt(6, x, y)
+				//Right middle
+				else if (x == m.game.state.gardenSize - 1 && y > 0 && y < m.game.state.gardenSize - 1) {
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'middle-right'), x, y)
 				}
 				
 				//Bottom right corner
 				else if (y == m.game.state.gardenSize - 1 && x == m.game.state.gardenSize - 1) {
-		            m.game.layers.borders.putTileAt(8, x, y)
+					//m.game.layers.borders.putTileAt(8, x, y)
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'bottom-right'), x, y)
 				}
+				
+				//Bottom middle
+				else if (y == m.game.state.gardenSize - 1 && x > 0 && x < m.game.state.gardenSize - 1) {
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'bottom-middle'), x, y)
+				}
+
+				//Bottom left corner
+				else if (y == m.game.state.gardenSize - 1 && x == 0) {
+		            //m.game.layers.borders.putTileAt(6, x, y)
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'bottom-left'), x, y)
+				}
+				
+				//Left middle
+				else if (x == 0 && y > 0 && y < m.game.state.gardenSize - 1) {
+					if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'middle-left'), x, y)
+				}
+				
+				
 				
 				//Normal grid cells 
 				else {
-					
-					//TODO: make middle bottom grid
-					
+			
 					if (x == m.game.state.gardenSize - 1 ) {
-						m.game.layers.grid.putTileAt(11, x, y)
+						//m.game.layers.grids.putTileAt(11, x, y)
 					}
 					else if (y == m.game.state.gardenSize - 1) {
-						m.game.layers.grid.putTileAt(10, x, y)
+						//m.game.layers.grids.putTileAt(10, x, y)
 					}
 				
 				}
+				
+				
+				
+				//Put normal soil down on every plantable cell
+				if (!m.game.state.soil[m.toPosStr(x, y)]) m.sow(m.makeSoil('normal', 'middle-middle'), x, y)
+				
 			}
 			
 		}
 	}
-	
+		
 	//Hands back an array of x-y notations of valid cells
 	m.returnValidFarmCells = (X, Y, maxX, maxY) => {
 		let validCells = []
@@ -265,28 +330,68 @@ angular.module('farma', [])
 		return pos
 	}
 	
+	//Creates a seed from the given plant family
+	m.makeSeed = (family) => {
+		return {plantType: family.seed}
+	}
+	
+	//Creates a specific piece of soil soil
+	m.makeSoil = (type, name) => {
+		let soil = JSON.parse(JSON.stringify(m.soils[type][name]))
+		soil.soilType = type
+		soil.name = name
+		soil.isSoil = true 
+		soil.tile = m.soils[type][name].tile
+		
+		return soil
+	}
+	
 	//Plants a plant in a cell, if the cell is free / forced
-	m.sowPlant = (plantType, x, y, force, spriteOnly) => {
+	m.sow = (item, x, y, force, spriteOnly) => {
 		//Get the position string, and the cell
 		let posStr = m.toPosStr(x, y),
-			cell = m.game.state.plants[posStr]
+			
+			//Get the current cell data
+			cell = m.game.state.plants[posStr],
+			
+			//Is this item soil?
+			isSoil = item.isSoil
 		
 		//Check if the cell is valid (aka empty)
-		if ((!cell || (!!cell && cell.isSoil)) || force) {
-			let tile = m.game.layers.crops.putTileAt(plantType, x, y)
+		if ((!cell || (!!cell && cell.isSoil)) || (isSoil) || force) {
 			
 			//Make a state entry too?
 			if (!spriteOnly) {
-				//Set the cell to the new plant in the state
-				m.game.state.plants[posStr] = {
-					plantType: plantType,
-					soilType: (cell && cell.isSoil ? cell.soilType : 'normal'),
-					fertilizerType: (cell && cell.isSoil ? cell.fertilizerType : 'normal'),
-					tile: tile, 
-					timestamp: new Date().getTime()
+				
+				//This sows some soil
+				if (isSoil) {
+					let tile = m.game.layers.soils.putTileAt(item.tile, x, y)
+					m.game.state.soil[posStr] = {
+						soilType: item.soilType,
+						name: item.name,
+						tile: tile,
+						timestamp: new Date().getTime()
+					}
+				}
+				
+				//Sow a plant into this location, with the soil and fertilizer as per this spot
+				if (item.plantType) {
+					let tile = m.game.layers.crops.putTileAt(item.plantType, x, y)
+					m.game.state.plants[posStr] = {
+						plantType: item.plantType,
+						tile: tile, 
+						timestamp: new Date().getTime()
+					}
 				}
 			}
 			else {
+				let tile 
+				if (isSoil) {
+					tile = m.game.layers.soils.putTileAt(item.tile, x, y)
+				}
+				else {
+					tile = m.game.layers.crops.putTileAt(item.plantType, x, y)
+				}
 				return tile
 			}
 		}
@@ -294,13 +399,26 @@ angular.module('farma', [])
 	
 	//Creates the layers, destroying old ones if need be
 	m.createLayers = () => {
-		if (m.game.layers.soils) m.game.layers.soils.destroy()
-		m.game.layers.soils = m.game.map.createBlankDynamicLayer('soils', m.game.tiles.soils)
 		
+		//Destroy the layers (if they exist), then remake them 
+		if (m.game.layers.soils) m.game.layers.soils.destroy()
+		m.game.layers.soils = m.game.map.createBlankDynamicLayer('soil', m.game.tiles.soils)
+			
+		if (m.game.layers.grids) m.game.layers.grids.destroy()
+		m.game.layers.grids = m.game.map.createBlankDynamicLayer('grid', m.game.tiles.borders)
+					
 		if (m.game.layers.crops) m.game.layers.crops.destroy()
 		m.game.layers.crops = m.game.map.createBlankDynamicLayer('crops', m.game.tiles.crops)
 		
-		m.createBorders()
+		if (m.game.layers.borders) m.game.layers.borders.destroy()
+		m.game.layers.borders = m.game.map.createBlankDynamicLayer('borders', m.game.tiles.borders)
+		
+		if (m.game.layers.fences) m.game.layers.fences.destroy()
+		m.game.layers.fences = m.game.map.createBlankDynamicLayer('fences', m.game.tiles.fences)
+			
+				
+		
+		m.createBed()
 	}
 
 	//Creates layers, and sets camera position
@@ -331,7 +449,11 @@ angular.module('farma', [])
 	}
 	
 	//Creates the game engine (Phaser currently)
-	m.initializeEngine = () => {
+	m.initializeEngine = (callback) => {
+		
+		//Pass the callback forwards
+		m.game._callback = callback
+		
 		//Create the engine
 		m.game.engine = new Phaser.Game(m.game.config)
 		
@@ -345,7 +467,8 @@ angular.module('farma', [])
 	//Handles preloading assets
 	m.enginePreload = (t) => {
 		t.load.image('grid', 'sys/img/grid-cell.png');
-		//t.load.image('soils', 'sys/img/soils.png');
+		t.load.image('soils', 'sys/img/terrain.png');
+		t.load.image('fences', 'sys/img/fences.png');
 		t.load.image('crops', 'sys/img/crops.png');
 		t.load.image('borders', 'sys/img/border-tiles.png');
 	}
@@ -392,7 +515,7 @@ angular.module('farma', [])
 		})
 		
 		m.setUpGarden(t)
-		
+		if (m.game._callback) requestAnimationFrame(m.game._callback)
 	}
 		
 	//The main game loop, should probably just use this to call other loop funcs... dunno
@@ -413,8 +536,11 @@ angular.module('farma', [])
 				if (m.game.mouse.clicked) {
 					
 					//Is this a valid location?
-					if (validCell) {				
-						m.sowPlant(32, m.game.mouse.tileX, m.game.mouse.tileY)
+					if (validCell) {		
+						//TODO: Make a proper seed selection, but hard coding potato seed for now
+						//let potatoSeed = m.makeSeed(m.plants.potato) 
+						//m.sow(potatoSeed, m.game.mouse.tileX, m.game.mouse.tileY)
+						m.game.layers.crops.removeTileAt(m.game.mouse.tileX, m.game.mouse.tileY)
 					}
 					
 					//Clear the clicked state
