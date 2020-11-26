@@ -304,8 +304,8 @@ angular.module('farma', [])
 	//Hands back an array of x-y notations of valid cells
 	m.returnValidFarmCells = (X, Y, maxX, maxY) => {
 		let validCells = []
-		for (let y = 0; y < m.game.state.gardenSize; y++) {
-			for (let x = 0; x < m.game.state.gardenSize; x++) {
+		for (let y = 1; y < m.game.state.gardenSize - 1; y++) {
+			for (let x = 1; x < m.game.state.gardenSize - 1; x++) {
 				validCells.push(m.toPosStr(x, y))
 			}
 		}
@@ -397,6 +397,12 @@ angular.module('farma', [])
 		}
 	}
 	
+	m.removePlant = (x, y) => {
+		let posStr = m.toPosStr(x, y)
+		m.game.layers.crops.removeTileAt(x, y)
+		delete m.game.state.plants[posStr]
+	}
+	
 	//Creates the layers, destroying old ones if need be
 	m.createLayers = () => {
 		
@@ -406,7 +412,11 @@ angular.module('farma', [])
 			
 		if (m.game.layers.grids) m.game.layers.grids.destroy()
 		m.game.layers.grids = m.game.map.createBlankDynamicLayer('grid', m.game.tiles.borders)
-					
+		
+		//Set the grid to 50% opacity
+		m.game.layers.grids.alpha = 0.5
+		
+		
 		if (m.game.layers.crops) m.game.layers.crops.destroy()
 		m.game.layers.crops = m.game.map.createBlankDynamicLayer('crops', m.game.tiles.crops)
 		
@@ -438,6 +448,11 @@ angular.module('farma', [])
 		
 		//Set the camera position
 		t.cameras.main.setPosition(m.game.cameraPos.x, m.game.cameraPos.y)
+	}
+	
+	m.setUpControls = (t) => {
+		 m.game.controls = {}
+		 m.game.controls.ctrl = t.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL)
 	}
 	
 	//This is where things like determining growth and so forth are.
@@ -515,6 +530,9 @@ angular.module('farma', [])
 		})
 		
 		m.setUpGarden(t)
+		
+		m.setUpControls(t)
+		
 		if (m.game._callback) requestAnimationFrame(m.game._callback)
 	}
 		
@@ -536,11 +554,16 @@ angular.module('farma', [])
 				if (m.game.mouse.clicked) {
 					
 					//Is this a valid location?
-					if (validCell) {		
+					if (validCell) {
+						
 						//TODO: Make a proper seed selection, but hard coding potato seed for now
-						//let potatoSeed = m.makeSeed(m.plants.potato) 
-						//m.sow(potatoSeed, m.game.mouse.tileX, m.game.mouse.tileY)
-						m.game.layers.crops.removeTileAt(m.game.mouse.tileX, m.game.mouse.tileY)
+						if (t.input.keyboard.checkDown(m.game.controls.ctrl, 0)) {
+							m.removePlant(m.game.mouse.tileX, m.game.mouse.tileY)							
+						}
+						else {
+							let potatoSeed = m.makeSeed(m.plants.potato) 
+							m.sow(potatoSeed, m.game.mouse.tileX, m.game.mouse.tileY)
+						}
 					}
 					
 					//Clear the clicked state

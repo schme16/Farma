@@ -20,23 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc69b26d-ea7f-4a9e-bf91-8a87b3fb71bb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/res/border-tiles.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/crops/crops.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/terrain.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/terrain/Attribution.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/terrain/terrain.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/terrain/terrain.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/img/fences.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/img/terrain.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/js/plants.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sys/js/soils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/border-tiles.psd" beforeDir="false" afterPath="$PROJECT_DIR$/res/border-tiles.psd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sys/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/sys/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sys/img/border-tiles.png" beforeDir="false" afterPath="$PROJECT_DIR$/sys/img/border-tiles.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sys/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/sys/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sys/pages/main-menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/sys/pages/main-menu.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +56,7 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/sys/pages/main-menu.html" />
         <option value="$PROJECT_DIR$/sys/js/soils.js" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/test.js" />
         <option value="$PROJECT_DIR$/sys/js/main.js" />
       </list>
     </option>
@@ -98,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605838183347</updated>
-      <workItem from="1605838232795" duration="65887000" />
+      <workItem from="1605838232795" duration="70501000" />
     </task>
     <servers />
   </component>
