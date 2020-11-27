@@ -21,8 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="bc69b26d-ea7f-4a9e-bf91-8a87b3fb71bb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Farma.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/border-tiles.psd" beforeDir="false" afterPath="$PROJECT_DIR$/res/border-tiles.psd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sys/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/sys/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sys/js/plants.js" beforeDir="false" afterPath="$PROJECT_DIR$/sys/js/plants.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,11 +52,11 @@
         <option value="$PROJECT_DIR$/sys/css/mobile.css" />
         <option value="$PROJECT_DIR$/sys/pages/game.html" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/temp.js" />
-        <option value="$PROJECT_DIR$/sys/js/plants.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/sys/pages/main-menu.html" />
         <option value="$PROJECT_DIR$/sys/js/soils.js" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/test.js" />
+        <option value="$PROJECT_DIR$/sys/js/plants.js" />
         <option value="$PROJECT_DIR$/sys/js/main.js" />
       </list>
     </option>
@@ -85,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605838183347</updated>
-      <workItem from="1605838232795" duration="70501000" />
+      <workItem from="1605838232795" duration="82081000" />
     </task>
     <servers />
   </component>
@@ -110,17 +110,17 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1033" y="462" width="540" height="524" key="StructurePopup" timestamp="1606273527232">
+    <state x="1033" y="462" width="540" height="524" key="StructurePopup" timestamp="1606457344975">
       <screen x="62" y="0" width="2498" height="1440" />
     </state>
-    <state x="1033" y="462" width="540" height="524" key="StructurePopup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606273527232" />
+    <state x="1033" y="462" width="540" height="524" key="StructurePopup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606457344975" />
     <state x="968" y="341" key="run.anything.popup" timestamp="1606265741511">
       <screen x="62" y="0" width="2498" height="1440" />
     </state>
     <state x="968" y="341" key="run.anything.popup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606265741511" />
-    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup" timestamp="1606264049777">
+    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup" timestamp="1606453884696">
       <screen x="62" y="0" width="2498" height="1440" />
     </state>
-    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606264049777" />
+    <state x="974" y="325" width="672" height="678" key="search.everywhere.popup/62.0.2498.1440/3840.0.1858.1080@62.0.2498.1440" timestamp="1606453884696" />
   </component>
 </project>
